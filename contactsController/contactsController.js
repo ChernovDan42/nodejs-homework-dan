@@ -10,23 +10,20 @@ const { v4: uuidv4 } = require("uuid");
 exports.getContacts = catchAsync(async (req, res) => {
   const allContacts = await listContacts();
 
-  res.status(200).json({
-    message: "Success!",
-    contacts: allContacts,
-  });
+  res.status(200).json(allContacts);
 });
 
 exports.getContact = (req, res) => {
-  res.status(200).json({
-    msg: "Success!",
-    contact: req.contact,
-  });
+  res.status(200).json(req.contact);
 };
 
 exports.createContact = catchAsync(async (req, res) => {
   const { error, value } = contactsValidation.addNewContactValidation(req.body);
 
-  if (error) throw new HttpError(400, error);
+  if (error) {
+    const er = error.details[0].message.split(" ");
+    throw new HttpError(400, `missing required ${er[0]} field`);
+  }
 
   const { name, email, phone } = value;
 
@@ -39,9 +36,7 @@ exports.createContact = catchAsync(async (req, res) => {
 
   await addContact(newContact);
 
-  res.status(201).json({
-    newContact: newContact,
-  });
+  res.status(201).json(newContact);
 });
 
 exports.deleteContact = catchAsync(async (req, res) => {
@@ -57,13 +52,14 @@ exports.deleteContact = catchAsync(async (req, res) => {
 exports.updateContact = catchAsync(async (req, res) => {
   const { error, value } = contactsValidation.updateContactValidation(req.body);
 
-  if (error) throw new HttpError(400, error);
+  if (error) {
+    const er = error.details[0].message.split(" ");
+    throw new HttpError(400, `missing required ${er[0]} field`);
+  }
 
   const { id } = req.contact;
 
   const updatedContact = await updateContact(id, value);
 
-  res.status(200).json({
-    contact: updatedContact,
-  });
+  res.status(200).json(updatedContact);
 });
