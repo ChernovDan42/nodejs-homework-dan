@@ -1,4 +1,4 @@
-const { catchAsync } = require("../utils");
+const { catchAsync, contactsValidation, HttpError } = require("../utils");
 const {
   listContacts,
   addContact,
@@ -24,7 +24,11 @@ exports.getContact = (req, res) => {
 };
 
 exports.createContact = catchAsync(async (req, res) => {
-  const { name, email, phone } = req.body;
+  const { error, value } = contactsValidation.addNewContactValidation(req.body);
+
+  if (error) throw new HttpError(400, error);
+
+  const { name, email, phone } = value;
 
   const newContact = {
     id: uuidv4(),
@@ -36,7 +40,6 @@ exports.createContact = catchAsync(async (req, res) => {
   await addContact(newContact);
 
   res.status(201).json({
-    msg: "Success!",
     newContact: newContact,
   });
 });
@@ -52,11 +55,15 @@ exports.deleteContact = catchAsync(async (req, res) => {
 });
 
 exports.updateContact = catchAsync(async (req, res) => {
+  const { error, value } = contactsValidation.updateContactValidation(req.body);
+
+  if (error) throw new HttpError(400, error);
+
   const { id } = req.contact;
 
-  const updatedContact = await updateContact(id, req.body);
+  const updatedContact = await updateContact(id, value);
 
-    res.status(200).json({
-      contact: updatedContact,
-    });
+  res.status(200).json({
+    contact: updatedContact,
+  });
 });
