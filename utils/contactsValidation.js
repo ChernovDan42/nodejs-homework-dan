@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const HttpError = require("./httpError");
 
 exports.addNewContactValidation = (data) => {
   const phonePattern = /^\(\d{3}\) \d{3}-\d{4}$/;
@@ -28,4 +29,10 @@ exports.updateContactValidation = (data) => {
         .required(),
     })
     .validate(data);
+};
+
+exports.isBodyEmpty = (body) => {
+  const isEmpty = Object.keys(body).length === 0;
+
+  if (isEmpty) throw new HttpError(400, "missing fields");
 };

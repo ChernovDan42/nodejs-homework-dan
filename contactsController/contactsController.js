@@ -50,6 +50,8 @@ exports.deleteContact = catchAsync(async (req, res) => {
 });
 
 exports.updateContact = catchAsync(async (req, res) => {
+  contactsValidation.isBodyEmpty(req.body);
+
   const { error, value } = contactsValidation.updateContactValidation(req.body);
 
   if (error) {
