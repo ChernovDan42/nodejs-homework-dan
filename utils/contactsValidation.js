@@ -7,11 +7,17 @@ exports.addNewContactValidation = (data) => {
   return Joi.object()
     .options({ abortEarly: false })
     .keys({
-      name: Joi.string().required(),
-      email: Joi.string().email().required(),
+      name: Joi.string()
+        .required()
+        .messages({ "any.required": "missing required name field" }),
+      email: Joi.string()
+        .email()
+        .required()
+        .messages({ "any.required": "missing required email field" }),
       phone: Joi.string()
         .pattern(phonePattern, "Phone number format: (XXX) XXX-XXXX")
-        .required(),
+        .required()
+        .messages({ "any.required": "missing required phone field" }),
     })
     .validate(data);
 };

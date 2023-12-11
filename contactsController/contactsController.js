@@ -21,8 +21,7 @@ exports.createContact = catchAsync(async (req, res) => {
   const { error, value } = contactsValidation.addNewContactValidation(req.body);
 
   if (error) {
-    const er = error.details[0].message.split(" ");
-    throw new HttpError(400, `missing required ${er[0]} field`);
+    throw new HttpError(400, error.message);
   }
 
   const { name, email, phone } = value;
