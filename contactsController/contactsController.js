@@ -18,7 +18,7 @@ exports.getContact = (req, res) => {
 };
 
 exports.createContact = catchAsync(async (req, res) => {
-  const { error, value } = contactsValidation.addNewContactValidation(req.body);
+  const { error, value } = contactsValidation.contactValidation(req.body);
 
   if (error) {
     throw new HttpError(400, error.message);
@@ -51,11 +51,10 @@ exports.deleteContact = catchAsync(async (req, res) => {
 exports.updateContact = catchAsync(async (req, res) => {
   contactsValidation.isBodyEmpty(req.body);
 
-  const { error, value } = contactsValidation.updateContactValidation(req.body);
+  const { error, value } = contactsValidation.contactValidation(req.body);
 
   if (error) {
-    const er = error.details[0].message.split(" ");
-    throw new HttpError(400, `missing required ${er[0]} field`);
+    throw new HttpError(400, error.message);
   }
 
   const { id } = req.contact;
