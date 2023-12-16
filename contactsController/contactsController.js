@@ -1,47 +1,25 @@
-const { catchAsync, contactsValidation, HttpError } = require("../utils");
-const {
-  listContacts,
-  addContact,
-  removeContact,
-  updateContact,
-} = require("../models/contacts");
-const { v4: uuidv4 } = require("uuid");
+const { catchAsync } = require("../utils");
+
+const { contactsServices } = require("../services");
 
 exports.getContacts = catchAsync(async (req, res) => {
-  const allContacts = await listContacts();
+  const allContacts = await contactsServices.getAllContacts();
 
   res.status(200).json(allContacts);
 });
 
-exports.getContact = (req, res) => {
-  res.status(200).json(req.contact);
-};
+exports.getContact = catchAsync(async (req, res) => {
+  const contact = await contactsServices.getContactById(req.params.contactId);
+  res.status(200).json(contact);
+});
 
 exports.createContact = catchAsync(async (req, res) => {
-  const { error, value } = contactsValidation.contactValidation(req.body);
-
-  if (error) {
-    throw new HttpError(400, error.message);
-  }
-
-  const { name, email, phone } = value;
-
-  const newContact = {
-    id: uuidv4(),
-    name,
-    email,
-    phone,
-  };
-
-  await addContact(newContact);
-
+  const newContact = await contactsServices.createNewContact(req.body);
   res.status(201).json(newContact);
 });
 
 exports.deleteContact = catchAsync(async (req, res) => {
-  const { id } = req.contact;
-
-  await removeContact(id);
+  await contactsServices.deleteContact(req.params.contactId);
 
   res.status(200).json({
     msg: "Contact deleted",
@@ -49,17 +27,19 @@ exports.deleteContact = catchAsync(async (req, res) => {
 });
 
 exports.updateContact = catchAsync(async (req, res) => {
-  contactsValidation.isBodyEmpty(req.body);
-
-  const { error, value } = contactsValidation.contactValidation(req.body);
-
-  if (error) {
-    throw new HttpError(400, error.message);
-  }
-
-  const { id } = req.contact;
-
-  const updatedContact = await updateContact(id, value);
+  const updatedContact = await contactsServices.updateContact(
+    req.params.contactId,
+    req.body
+  );
 
   res.status(200).json(updatedContact);
+});
+
+exports.updateStatus = catchAsync(async (req, res) => {
+  const contact = await contactsServices.updateStatusContact(
+    req.params.contactId,
+    req.body
+  );
+
+  res.status(200).json(contact);
 });

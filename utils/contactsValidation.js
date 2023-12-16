@@ -18,6 +18,17 @@ exports.contactValidation = (data) => {
         .pattern(phonePattern, "Phone number format: (XXX) XXX-XXXX")
         .required()
         .messages({ "any.required": "missing required phone field" }),
+      favorite: Joi.boolean(),
+    })
+    .validate(data);
+};
+
+exports.contactStatusValidation = (data) => {
+  return Joi.object()
+    .keys({
+      favorite: Joi.boolean()
+        .required()
+        .messages({ "any.required": "missing required favorite field" }),
     })
     .validate(data);
 };
@@ -26,4 +37,10 @@ exports.isBodyEmpty = (body) => {
   const isEmpty = Object.keys(body).length === 0;
 
   if (isEmpty) throw new HttpError(400, "missing fields");
+};
+
+exports.isStatusBodyEmpty = (body) => {
+  const isEmpty = Object.keys(body).length === 0;
+
+  if (isEmpty) throw new HttpError(400, "missing field favorite");
 };

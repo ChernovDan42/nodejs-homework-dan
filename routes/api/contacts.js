@@ -11,10 +11,24 @@ router.get("/", contactsController.getContacts);
 
 router.get("/:contactId", contactsController.getContact);
 
-router.post("/", contactsController.createContact);
+router.post(
+  "/",
+  contactMiddleware.checkCreateContactData,
+  contactsController.createContact
+);
 
 router.delete("/:contactId", contactsController.deleteContact);
 
-router.put("/:contactId", contactsController.updateContact);
+router.put(
+  "/:contactId",
+  contactMiddleware.checkUpdateContactData,
+  contactsController.updateContact
+);
+
+router.patch(
+  "/:contactId/favorite",
+  contactMiddleware.checkUpdateStatusData,
+  contactsController.updateStatus
+);
 
 module.exports = router;
