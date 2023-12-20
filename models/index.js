@@ -1,5 +1,7 @@
 const Contact = require("./contactModel");
+const User = require("./userModel");
 
-module.export = {
+module.exports = {
   Contact,
+  User,
 };

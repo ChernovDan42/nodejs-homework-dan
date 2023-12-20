@@ -1,4 +1,4 @@
-const { serverConfig } = require("../configs");
+const { serverConfig } = require("../../configs");
 
 exports.globalErrorHandler = (err, req, res, next) => {
   if (serverConfig.environment === "production") {
