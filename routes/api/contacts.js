@@ -5,7 +5,9 @@ const router = express.Router();
 const {
   contactsController,
 } = require("../../controllers/contactsController/index");
-const { contactMiddleware } = require("../../middlewares/index");
+const { contactMiddleware, userMiddleware } = require("../../middlewares");
+
+router.use(userMiddleware.protect);
 
 router.use("/:contactId", contactMiddleware.checkContactId);
 

@@ -1,5 +1,7 @@
-const userRoleEnum = require("./userRoleEnum");
+const userSubscriptionEnum = require("./userSubscriptionEnum");
+const regex = require("./regex");
 
 module.exports = {
-  userRoleEnum,
+  userSubscriptionEnum,
+  regex,
 };
