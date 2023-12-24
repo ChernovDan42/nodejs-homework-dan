@@ -33,3 +33,12 @@ exports.getCurrentUser = catchAsync(async (req, res) => {
     subscription,
   });
 });
+
+exports.updateUserSubscription = catchAsync(async (req, res) => {
+  const user = await usersServices.updateUserSubscription(
+    req.params.id,
+    req.body
+  );
+
+  res.status(200).json(user);
+});

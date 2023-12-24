@@ -12,8 +12,13 @@ router.post(
   userMiddleware.checkUserRegisterData,
   usersController.register
 );
-
 router.post("/login", userMiddleware.checkUserLoginData, usersController.login);
 router.post("/logout", userMiddleware.protect, usersController.logout);
+
+router.patch(
+  "/:id",
+  userMiddleware.protect,
+  usersController.updateUserSubscription
+);
 
 module.exports = router;

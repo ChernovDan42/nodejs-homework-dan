@@ -54,3 +54,10 @@ exports.checkUserExist = async (filter) => {
 
   if (userExists) throw new HttpError(409, "Email in use");
 };
+
+exports.updateUserSubscription = async (id, subscriptionType) => {
+  const user = await User.findById(id);
+  user.subscription = subscriptionType.subscription;
+
+  return user.save();
+};

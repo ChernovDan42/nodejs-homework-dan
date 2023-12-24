@@ -3,7 +3,19 @@ const { Types } = require("mongoose");
 const { Contact } = require("../models");
 const { HttpError } = require("../utils");
 
-exports.getAllContacts = () => Contact.find();
+exports.getAllContacts = async (query) => {
+  const filterOptions = query.favorite ? { favorite: query.favorite } : {};
+
+  const contactsQuery = Contact.find(filterOptions);
+
+  const paginationPage = query.page ? +query.page : 1;
+  const paginationLimit = query.limit ? +query.limit : 20;
+  const contactsToSkip = (paginationPage - 1) * paginationLimit;
+
+  contactsQuery.skip(contactsToSkip).limit(paginationLimit);
+
+  return await contactsQuery;
+};
 
 exports.getContactById = (id) => Contact.findById(id);
 

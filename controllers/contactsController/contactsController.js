@@ -3,7 +3,7 @@ const { catchAsync } = require("../../utils");
 const { contactsServices } = require("../../services");
 
 exports.getContacts = catchAsync(async (req, res) => {
-  const allContacts = await contactsServices.getAllContacts();
+  const allContacts = await contactsServices.getAllContacts(req.query);
 
   res.status(200).json(allContacts);
 });

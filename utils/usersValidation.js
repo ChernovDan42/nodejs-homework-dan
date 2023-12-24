@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const { regex } = require("../constants");
+const { regex, userSubscriptionEnum } = require("../constants");
 
 exports.userDataValidation = (data) => {
   return Joi.object()
@@ -18,6 +18,7 @@ exports.userDataValidation = (data) => {
         .messages({
           "any.required": "missing required password field",
         }),
+      subscription: Joi.string().valid(...Object.values(userSubscriptionEnum)),
     })
     .validate(data);
 };
