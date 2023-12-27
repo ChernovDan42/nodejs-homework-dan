@@ -3,13 +3,11 @@ const { Types } = require("mongoose");
 const { Contact } = require("../models");
 const { HttpError } = require("../utils");
 
-exports.getAllContacts = async (query,owner) => {
-  const filterOptions = query.favorite ? { favorite: query.favorite } : {};
-
-   if (!query.favorite) {
-     filterOptions.owner = owner;
-   }
-
+exports.getAllContacts = async (query, owner) => {
+  console.log(query);
+  const filterOptions = query.favorite
+    ? { favorite: query.favorite, owner }
+    : { owner };
 
   const contactsQuery = Contact.find(filterOptions);
 
