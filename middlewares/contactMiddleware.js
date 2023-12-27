@@ -15,10 +15,6 @@ exports.checkCreateContactData = catchAsync(async (req, res, next) => {
     throw new HttpError(400, error.message);
   }
 
-  await contactsServices.checkContactExists(
-    { email: value.email },
-    { phone: value.phone }
-  );
 
   req.body = value;
 

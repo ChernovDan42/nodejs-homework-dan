@@ -3,7 +3,10 @@ const { catchAsync } = require("../../utils");
 const { contactsServices } = require("../../services");
 
 exports.getContacts = catchAsync(async (req, res) => {
-  const allContacts = await contactsServices.getAllContacts(req.query);
+  const allContacts = await contactsServices.getAllContacts(
+    req.query,
+    req.user
+  );
 
   res.status(200).json(allContacts);
 });
@@ -14,7 +17,10 @@ exports.getContact = catchAsync(async (req, res) => {
 });
 
 exports.createContact = catchAsync(async (req, res) => {
-  const newContact = await contactsServices.createNewContact(req.body);
+  const newContact = await contactsServices.createNewContact(
+    req.body,
+    req.user
+  );
   res.status(201).json(newContact);
 });
 

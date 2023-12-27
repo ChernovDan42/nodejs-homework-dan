@@ -3,8 +3,13 @@ const { Types } = require("mongoose");
 const { Contact } = require("../models");
 const { HttpError } = require("../utils");
 
-exports.getAllContacts = async (query) => {
+exports.getAllContacts = async (query,owner) => {
   const filterOptions = query.favorite ? { favorite: query.favorite } : {};
+
+   if (!query.favorite) {
+     filterOptions.owner = owner;
+   }
+
 
   const contactsQuery = Contact.find(filterOptions);
 
@@ -19,8 +24,8 @@ exports.getAllContacts = async (query) => {
 
 exports.getContactById = (id) => Contact.findById(id);
 
-exports.createNewContact = async (contactData) => {
-  const newContact = Contact.create(contactData);
+exports.createNewContact = async (contactData, owner) => {
+  const newContact = Contact.create({ ...contactData, owner });
   return newContact;
 };
 
