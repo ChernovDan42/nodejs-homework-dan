@@ -3,11 +3,10 @@ const { Types } = require("mongoose");
 const { Contact } = require("../models");
 const { HttpError } = require("../utils");
 
-exports.getAllContacts = async (query, owner) => {
-  console.log(query);
+exports.getAllContacts = async (query, ownerId) => {
   const filterOptions = query.favorite
-    ? { favorite: query.favorite, owner }
-    : { owner };
+    ? { favorite: query.favorite, owner: ownerId }
+    : { owner: ownerId };
 
   const contactsQuery = Contact.find(filterOptions);
 
@@ -20,24 +19,33 @@ exports.getAllContacts = async (query, owner) => {
   return await contactsQuery;
 };
 
-exports.getContactById = (id) => Contact.findById(id);
+exports.getContactById = (id, ownerId) =>
+  Contact.findOne({ _id: id, owner: ownerId });
 
-exports.createNewContact = async (contactData, owner) => {
-  const newContact = Contact.create({ ...contactData, owner });
+exports.createNewContact = async (contactData, ownerId) => {
+  const newContact = await Contact.create({ ...contactData, owner: ownerId });
   return newContact;
 };
 
-exports.deleteContact = async (id) => await Contact.findByIdAndDelete(id);
-
-exports.updateContact = async (id, contactData) => {
-  const updatedContact = await Contact.findByIdAndUpdate(id, contactData, {
-    new: true,
+exports.deleteContact = async (id, ownerId) =>
+  await Contact.findOneAndDelete({
+    _id: id,
+    owner: ownerId,
   });
+
+exports.updateContact = async (id, ownerId, contactData) => {
+  const updatedContact = await Contact.findOneAndUpdate(
+    { _id: id, owner: ownerId },
+    contactData,
+    {
+      new: true,
+    }
+  );
   return updatedContact;
 };
 
-exports.updateStatusContact = async (id, contactData) => {
-  const contact = await Contact.findById(id);
+exports.updateStatusContact = async (id, ownerId, contactData) => {
+  const contact = await Contact.findOne({ _id: id, owner: ownerId });
   contact.favorite = contactData.favorite;
 
   return contact.save();
