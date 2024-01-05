@@ -67,7 +67,7 @@ exports.updateMe = async (userData, user, file) => {
   if (file) {
     user.avatarURL = await ImageService.saveImage(
       file,
-      { maxFileSize: 1.2, width: 100, height: 100 },
+      { maxFileSize: 1.2, width: 250, height: 250 },
       "avatars",
       "users",
       user.id
