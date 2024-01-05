@@ -3,6 +3,7 @@
 const { userSubscriptionEnum } = require("../constants");
 const { User } = require("../models");
 const { HttpError } = require("../utils");
+const ImageService = require("./imageServices");
 const { signToken } = require("./jwtServices");
 
 exports.createNewUser = async (userData) => {
@@ -58,6 +59,24 @@ exports.checkUserExist = async (filter) => {
 exports.updateUserSubscription = async (id, subscriptionType) => {
   const user = await User.findById(id);
   user.subscription = subscriptionType.subscription;
+
+  return user.save();
+};
+
+exports.updateMe = async (userData, user, file) => {
+  if (file) {
+    user.avatarURL = await ImageService.saveImage(
+      file,
+      { maxFileSize: 1.2, width: 100, height: 100 },
+      "avatars",
+      "users",
+      user.id
+    );
+  }
+
+  Object.keys(userData).forEach((key) => {
+    user[key] = userData[key];
+  });
 
   return user.save();
 };

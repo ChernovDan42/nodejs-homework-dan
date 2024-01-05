@@ -1,4 +1,4 @@
-const { usersServices, jwtServices } = require("../services");
+const { usersServices, jwtServices, ImageService } = require("../services");
 const { catchAsync, usersValidation, HttpError } = require("../utils");
 const { User } = require("../models");
 
@@ -31,16 +31,16 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const userId = jwtServices.checkToken(token);
 
-
   if (!userId) throw new HttpError(401, "Not authorized");
-
 
   const currentUser = await User.findById(userId);
 
   if (!currentUser || currentUser.token !== token)
-    throw new HttpError(401, "Not authorized"); 
+    throw new HttpError(401, "Not authorized");
 
   req.user = currentUser;
 
   next();
 });
+
+exports.uploadUserPhoto = ImageService.initUploadImageMiddleware("avatar");

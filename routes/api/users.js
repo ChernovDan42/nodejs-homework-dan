@@ -6,6 +6,12 @@ const { userMiddleware } = require("../../middlewares");
 const router = express.Router();
 
 router.get("/current", userMiddleware.protect, usersController.getCurrentUser);
+router.patch(
+  "/avatars",
+  userMiddleware.protect,
+  userMiddleware.uploadUserPhoto,
+  usersController.updateMe
+);
 
 router.post(
   "/register",
