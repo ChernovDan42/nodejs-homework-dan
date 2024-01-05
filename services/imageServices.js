@@ -50,7 +50,7 @@ class ImageService {
     await fse.ensureDir(fullFilePath);
     const avatar = await jimp.read(file.path);
     await avatar
-      .cover(options.width || 500, options.height || 500)
+      .cover(options.width || 250, options.height || 250)
       .quality(90)
       .writeAsync(path.join(fullFilePath, file.filename));
 
