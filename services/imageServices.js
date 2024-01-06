@@ -3,6 +3,7 @@ const jimp = require("jimp");
 const path = require("path");
 const uuid = require("uuid").v4;
 const fse = require("fs-extra");
+const fs = require("fs").promises;
 
 const { HttpError } = require("../utils");
 
@@ -32,7 +33,7 @@ class ImageService {
     return multer({
       storage: multerStorage,
       fileFilter: multerFilter,
-    }).single("avatar");
+    }).single(name);
   }
 
   static async saveImage(file, options, ...pathSegments) {
@@ -53,6 +54,8 @@ class ImageService {
       .cover(options.width || 250, options.height || 250)
       .quality(90)
       .writeAsync(path.join(fullFilePath, file.filename));
+
+    fs.unlink(file.path);
 
     return path.join("/", ...pathSegments, file.filename);
   }

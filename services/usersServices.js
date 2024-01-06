@@ -72,6 +72,8 @@ exports.updateMe = async (userData, user, file) => {
       "users",
       user.id
     );
+  } else {
+    throw new HttpError(400, "Please add your avatar");
   }
 
   Object.keys(userData).forEach((key) => {
