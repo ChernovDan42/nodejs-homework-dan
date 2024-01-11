@@ -5,6 +5,8 @@ const { userMiddleware } = require("../../middlewares");
 
 const router = express.Router();
 
+router.get("/verify/:verificationToken", usersController.verifyEmail);
+
 router.get("/current", userMiddleware.protect, usersController.getCurrentUser);
 router.patch(
   "/avatars",
@@ -20,6 +22,11 @@ router.post(
 );
 router.post("/login", userMiddleware.checkUserLoginData, usersController.login);
 router.post("/logout", userMiddleware.protect, usersController.logout);
+router.post(
+  "/verify",
+  userMiddleware.checkEmail,
+  usersController.resendVerificationMail
+);
 
 router.patch(
   "/:id",

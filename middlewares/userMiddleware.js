@@ -43,4 +43,14 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.checkEmail = catchAsync(async (req, res, next) => {
+  const {error,value}=usersValidation.validateEmail(req.body)
+  
+  if (error) throw new HttpError(400, error.details[0].message);
+
+  req.body = value
+
+  next()
+})
+
 exports.uploadUserPhoto = ImageService.initUploadImageMiddleware("avatar");

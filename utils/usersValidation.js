@@ -22,3 +22,14 @@ exports.userDataValidation = (data) => {
     })
     .validate(data);
 };
+
+exports.validateEmail = (data) => {
+  return Joi.object()
+    .keys({
+      email: Joi.string()
+        .email()
+        .required()
+        .messages({ "any.required": "missing required email field" }),
+    })
+    .validate(data);
+};

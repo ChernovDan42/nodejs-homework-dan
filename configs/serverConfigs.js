@@ -5,6 +5,8 @@ const serverConfig = {
   environment: process.env.NODE_ENV ?? "development",
   jwtSecret: process.env.SECRET ?? "secret-phrase",
   jwtExpires: process.env.JWT_EXPIRES ?? "1d",
+  metaEmailUser: process.env.META_MAIL,
+  metaEmailPass: process.env.META_PASS,
 };
 
 module.exports = serverConfig;
